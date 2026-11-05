@@ -270,7 +270,7 @@
         const body = await res.json();
         if (!body.ok) throw new Error(body.error);
         current = body.report;
-        currentMeta = t.live(((Date.now() - t0) / 1000).toFixed(1));
+        currentMeta = t.live(((Date.now() - t0) / 1000).toLocaleString(lang === "pt" ? "pt-BR" : "en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 }));
         $("status").textContent = "";
         if (current.venues?.length && current.kind === "rates") { venuesReport = current; renderVenues(); }
         render();
