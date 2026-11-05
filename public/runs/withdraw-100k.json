@@ -1,0 +1,342 @@
+{
+  "recordedAt": "2026-11-05T01:30:06.589Z",
+  "network": "Pharos Pacific Mainnet",
+  "question": "Withdraw 100,000 USDC from 0xD27Cb53f5920D484261CC14d32094d3f043265C9",
+  "intent": {
+    "kind": "withdraw",
+    "amount": "100000000000",
+    "user": "0xD27Cb53f5920D484261CC14d32094d3f043265C9"
+  },
+  "faults": {},
+  "kind": "withdraw",
+  "amount": "100000000000",
+  "all": false,
+  "user": "0xD27Cb53f5920D484261CC14d32094d3f043265C9",
+  "block": {
+    "number": 22142947,
+    "timestamp": 1793842192
+  },
+  "wallet": {
+    "address": "0xD27Cb53f5920D484261CC14d32094d3f043265C9",
+    "usdc": "70488778468",
+    "pros": "4960216333899064694",
+    "nonce": 31
+  },
+  "venues": [
+    {
+      "id": "rockawayx",
+      "name": "RockawayX USDC",
+      "protocol": "Morpho",
+      "address": "0x047cD0a91E9B92ED979189a6C8A120bf280f02E5",
+      "status": "ok",
+      "ms": 12513,
+      "injected": null,
+      "venue": "rockawayx",
+      "kind": "morpho-vault-v2",
+      "curator": "0x8747Cf054EfE02ECd4A7A31eB2030cefEB49d846",
+      "block": 22142947,
+      "tvl": "7214760806863",
+      "totalSupply": "7152051856347249054042427",
+      "idle": "300001062950",
+      "apy": 0.052128944719502864,
+      "grossApy": 0.06132817025823866,
+      "realised1d": 0.04887643175608525,
+      "realised7d": 0.046899306960078935,
+      "fees": {
+        "performance": 0.15,
+        "management": 0
+      },
+      "exitLiquidity": "1119646675678",
+      "depositRoom": null,
+      "depositsTo": "Morpho Blue wsrUSD/USDC market",
+      "accepts": {
+        "deposit": true,
+        "withdraw": true
+      },
+      "liquidityMarket": "0xbea21c372be9729760844cb2d60879f5ced6a8a5bba9a538dea8801e8ac49e73",
+      "lookThrough": [
+        {
+          "market": "0xbea21c372be9729760844cb2d60879f5ced6a8a5bba9a538dea8801e8ac49e73",
+          "collateral": "wsrUSD",
+          "lltv": 0.915,
+          "utilization": 0.8957369170862944,
+          "supplyApy": 0.04600651336024444,
+          "assets": "819645612728",
+          "share": 0.1136067618414067,
+          "liquidity": "2170391567533",
+          "receivesDeposits": true
+        },
+        {
+          "market": "0xc79579a002dbc8c535d3a87198fcbbece1a664ad82a356b0447c5bff9e16fd86",
+          "collateral": "syzUSD",
+          "lltv": 0.915,
+          "utilization": 0.9065383776933872,
+          "supplyApy": 0.06599723745363473,
+          "assets": "4173614508072",
+          "share": 0.5784827272585216,
+          "liquidity": "390072867997",
+          "receivesDeposits": false
+        },
+        {
+          "market": "0xb3b8a31c8a1652cf31eb872c7778716edc39471ed82bcad99b3f5c83a449e1ba",
+          "collateral": "WPROS",
+          "lltv": 0.385,
+          "utilization": 0.9117045432428376,
+          "supplyApy": 0.07319778271188125,
+          "assets": "1100601679460",
+          "share": 0.15254860263878173,
+          "liquidity": "97178149444",
+          "receivesDeposits": false
+        },
+        {
+          "market": "0x4cbedaf680d648926bafbce7d874ce717a1b3232ea7084c7c3593aa42bb429cd",
+          "collateral": "strUSD",
+          "lltv": 0.86,
+          "utilization": 0.9279233774649102,
+          "supplyApy": 0.05938617239918521,
+          "assets": "820679001803",
+          "share": 0.11374999445890621,
+          "liquidity": "59151814210",
+          "receivesDeposits": false
+        }
+      ],
+      "check": {
+        "ok": true,
+        "model": 0.052128944719502864,
+        "chain": 0.04887643175608525,
+        "note": "model net APY vs share-price growth over the last day"
+      },
+      "notes": []
+    },
+    {
+      "id": "sharpbyte",
+      "name": "SharpByte USDC Pharos Ecosystem",
+      "protocol": "Morpho",
+      "address": "0x15c25ED222fc498f672af5c3adb5ED0a96E1AFf1",
+      "status": "ok",
+      "ms": 12512,
+      "injected": null,
+      "venue": "sharpbyte",
+      "kind": "morpho-vault-v2",
+      "curator": "0x73fceD2CB2432ff354ab29E9dDc1FbDB203D8fDA",
+      "block": 22142947,
+      "tvl": "2255094554063",
+      "totalSupply": "2243976817977682260684917",
+      "idle": "33637311694",
+      "apy": 0.0467861174406159,
+      "grossApy": 0.055042491106606944,
+      "realised1d": 0.046397950066220606,
+      "realised7d": 0.0774151572246331,
+      "fees": {
+        "performance": 0.15,
+        "management": 0
+      },
+      "exitLiquidity": "33637311694",
+      "depositRoom": null,
+      "depositsTo": "idle in the vault",
+      "accepts": {
+        "deposit": true,
+        "withdraw": true
+      },
+      "liquidityMarket": null,
+      "lookThrough": [
+        {
+          "market": "0xba0d2638a277fd7696cdefdb96b5bd7405d0f174ba7526ce2c789f41149d91bc",
+          "collateral": "APC3M",
+          "lltv": 0.86,
+          "utilization": 0.8899778235555691,
+          "supplyApy": 0.0618645669934162,
+          "assets": "1134295443116",
+          "share": 0.5029924093747385,
+          "liquidity": "124797764204",
+          "receivesDeposits": false
+        },
+        {
+          "market": "0x082e865d3606768b6883039a1899df7d7267e012a1babf88ec0c29576098e90f",
+          "collateral": "VRPCW",
+          "lltv": 0.86,
+          "utilization": 0,
+          "supplyApy": 0,
+          "assets": "1000000",
+          "share": 4.4344038621276507e-7,
+          "liquidity": "2000000",
+          "receivesDeposits": false
+        },
+        {
+          "market": "0xd834016ed49b76ffcbeb8402733e2d69b1f77d30b28d6f21c826931214ae5aea",
+          "collateral": "APT",
+          "lltv": 0.86,
+          "utilization": 0.8981665123432464,
+          "supplyApy": 0.049625065684172645,
+          "assets": "1086625594210",
+          "share": 0.48185367316515776,
+          "liquidity": "110654976192",
+          "receivesDeposits": false
+        }
+      ],
+      "check": {
+        "ok": true,
+        "model": 0.0467861174406159,
+        "chain": 0.046397950066220606,
+        "note": "model net APY vs share-price growth over the last day"
+      },
+      "notes": [
+        "no liquidity adapter: new deposits stay idle until the curator allocates them, and withdrawals come only from idle USDC"
+      ]
+    },
+    {
+      "id": "avalon",
+      "name": "Avalon USDC",
+      "protocol": "Avalon",
+      "address": "0xD9B9E4F8257bFf9B1415d74c1EF88d8057f60cBa",
+      "status": "ok",
+      "ms": 4293,
+      "injected": null,
+      "venue": "avalon",
+      "kind": "aave-v3",
+      "block": 22142947,
+      "tvl": "501822977343",
+      "idle": "55015931814",
+      "apy": 0.0195819261213952,
+      "realised1d": 0.01947883317860888,
+      "realised7d": 0.019481954306229454,
+      "borrowApy": 0.04034688853492652,
+      "utilization": 0.8906942437046657,
+      "exitLiquidity": "55015931814",
+      "depositRoom": "498177022657",
+      "depositsTo": "Avalon USDC reserve (lent to Avalon borrowers)",
+      "state": {
+        "active": true,
+        "frozen": false,
+        "paused": false
+      },
+      "accepts": {
+        "deposit": true,
+        "withdraw": true
+      },
+      "lookThrough": [
+        {
+          "market": "USDC reserve",
+          "collateral": "Avalon collateral (WETH and others)",
+          "utilization": 0.8906942437046657,
+          "supplyApy": 0.0195819261213952,
+          "assets": "501822977343",
+          "share": 1,
+          "liquidity": "55015931814",
+          "receivesDeposits": true
+        }
+      ],
+      "check": {
+        "ok": true,
+        "model": 0.0195819261213952,
+        "chain": 0.019549763095112693,
+        "note": "calculateInterestRates(today's state) vs the pool's current liquidity rate"
+      },
+      "notes": [
+        "reserve factor 45%: that share of borrow interest goes to the treasury, not suppliers"
+      ]
+    }
+  ],
+  "holdings": [
+    {
+      "venue": "rockawayx",
+      "name": "RockawayX USDC",
+      "status": "ok",
+      "known": true,
+      "assets": "0",
+      "apy": 0.052128944719502864,
+      "exit": "1119646675678",
+      "withdrawable": "0"
+    },
+    {
+      "venue": "sharpbyte",
+      "name": "SharpByte USDC Pharos Ecosystem",
+      "status": "ok",
+      "known": true,
+      "assets": "678196836029",
+      "apy": 0.0467861174406159,
+      "exit": "33637311694",
+      "withdrawable": "33637311694"
+    },
+    {
+      "venue": "avalon",
+      "name": "Avalon USDC",
+      "status": "ok",
+      "known": true,
+      "assets": "250908390550",
+      "apy": 0.0195819261213952,
+      "exit": "55015931814",
+      "withdrawable": "55015931814"
+    }
+  ],
+  "plan": [
+    {
+      "venue": "avalon",
+      "amount": "55015931814",
+      "full": false
+    },
+    {
+      "venue": "sharpbyte",
+      "amount": "33637311694",
+      "full": false
+    }
+  ],
+  "covered": "88653243508",
+  "txs": [
+    {
+      "label": "Withdraw 55,015.93 USDC from Avalon USDC",
+      "call": "withdraw(0xC879C018dB60520F4355C26eD1a6D572cdAC1815, 55015931814, 0xD27Cb53f5920D484261CC14d32094d3f043265C9)",
+      "tx": {
+        "chainId": 1672,
+        "from": "0xD27Cb53f5920D484261CC14d32094d3f043265C9",
+        "to": "0xD9B9E4F8257bFf9B1415d74c1EF88d8057f60cBa",
+        "data": "0x69328dec000000000000000000000000c879c018db60520f4355c26ed1a6d572cdac18150000000000000000000000000000000000000000000000000000000ccf347fa6000000000000000000000000d27cb53f5920d484261cc14d32094d3f043265c9",
+        "value": "0x0",
+        "gas": "0x4af24",
+        "maxFeePerGas": "0x4a817c800",
+        "maxPriorityFeePerGas": "0x0",
+        "nonce": "0x1f",
+        "type": "0x2"
+      },
+      "cast": "cast send 0xD9B9E4F8257bFf9B1415d74c1EF88d8057f60cBa \"withdraw(address,uint256,address)\" 0xC879C018dB60520F4355C26eD1a6D572cdAC1815 55015931814 0xD27Cb53f5920D484261CC14d32094d3f043265C9 --rpc-url https://rpc.pharos.xyz",
+      "simulation": {
+        "ok": true,
+        "overrides": []
+      }
+    },
+    {
+      "label": "Withdraw 33,637.31 USDC from SharpByte USDC Pharos Ecosystem",
+      "call": "withdraw(33637311694, 0xD27Cb53f5920D484261CC14d32094d3f043265C9, 0xD27Cb53f5920D484261CC14d32094d3f043265C9)",
+      "tx": {
+        "chainId": 1672,
+        "from": "0xD27Cb53f5920D484261CC14d32094d3f043265C9",
+        "to": "0x15c25ED222fc498f672af5c3adb5ED0a96E1AFf1",
+        "data": "0xb460af9400000000000000000000000000000000000000000000000000000007d4f0a4ce000000000000000000000000d27cb53f5920d484261cc14d32094d3f043265c9000000000000000000000000d27cb53f5920d484261cc14d32094d3f043265c9",
+        "value": "0x0",
+        "gas": "0x3ce50",
+        "maxFeePerGas": "0x4a817c800",
+        "maxPriorityFeePerGas": "0x0",
+        "nonce": "0x20",
+        "type": "0x2"
+      },
+      "cast": "cast send 0x15c25ED222fc498f672af5c3adb5ED0a96E1AFf1 \"withdraw(uint256,address,address)\" 33637311694 0xD27Cb53f5920D484261CC14d32094d3f043265C9 0xD27Cb53f5920D484261CC14d32094d3f043265C9 --rpc-url https://rpc.pharos.xyz",
+      "simulation": {
+        "ok": true,
+        "overrides": []
+      }
+    }
+  ],
+  "gasCost": "11128080000000000",
+  "blockers": [],
+  "outcome": "partial",
+  "summary": "Only 88,653.24 of 100,000 USDC can leave now: Avalon USDC + SharpByte USDC Pharos Ecosystem.",
+  "explanation": [
+    "Avalon USDC first: of the venues that can pay out now it pays the least (1.96%), so taking 55,015.93 USDC from it gives up the least yield; 55,015.93 USDC can leave it right now.",
+    "Then SharpByte USDC Pharos Ecosystem (4.68%): 33,637.31 USDC.",
+    "SharpByte USDC Pharos Ecosystem: 678,196.84 USDC held, but only 33,637.31 can leave now (free liquidity) — the rest waits until borrowers repay or the curator reallocates.",
+    "Avalon USDC: 250,908.39 USDC held, but only 55,015.93 can leave now (free liquidity) — the rest waits until borrowers repay or the curator reallocates.",
+    "Only 88,653.24 of 100,000 USDC can be withdrawn right now; the plan below takes all of it.",
+    "Positions and liquidity read at block 22142947; each withdrawal simulated from 0xD27Cb53f5920D484261CC14d32094d3f043265C9. Nothing is signed."
+  ],
+  "ms": 19318
+}

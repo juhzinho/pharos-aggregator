@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pharos Multi-Protocol Aggregator</title>
+  <meta name="description" content="One interface over Morpho and Avalon on Pharos Pacific: rates, positions, deposits and withdrawals routed to the best venue, explained, and prepared for signature." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root { --bg:#fff; --card:#f7f8fa; --ink:#111; --muted:#6b7280; --line:#ececee; --line-2:#d9dbe0; --brand:#0033ff; --brand-soft:#eef1ff; --ok:#0a7d4f; --ok-soft:#e7f6ef; --warn:#c4312a; --warn-soft:#fdecea; --gold:#9a5b00; --gold-soft:#fff4e5; --vio:#6b3fd6; --vio-soft:#f1ecff; --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace; --sans:Inter,system-ui,-apple-system,"Segoe UI",sans-serif; }
+    * { box-sizing: border-box; }
+    html { color-scheme: light; }
+    body { margin: 0; font: 15px/1.5 var(--sans); color: var(--ink); background: var(--bg); }
+    a { color: var(--brand); }
+    .mono { font-family: var(--mono); font-size: 12.5px; }
+    .top { position: sticky; top: 0; z-index: 10; background: #fff; display: flex; align-items: center; gap: 16px; padding: 14px 40px; border-bottom: 1px solid var(--line); }
+    .brand { display: flex; gap: 10px; align-items: center; color: inherit; text-decoration: none; }
+    .brand b { font-size: 14px; letter-spacing: .12em; font-weight: 800; } .brand em { font-style: normal; color: var(--muted); font-size: 11px; font-weight: 600; letter-spacing: .1em; }
+    .spacer { flex: 1; } .links a { font-size: 13px; font-weight: 600; color: var(--ink); text-decoration: none; margin-right: 14px; }
+    .lang button { border: 1px solid var(--line-2); background: #fff; padding: 6px 11px; font: 600 12px var(--sans); cursor: pointer; }
+    .lang button:first-child { border-radius: 999px 0 0 999px; } .lang button:last-child { border-radius: 0 999px 999px 0; border-left: 0; }
+    .lang button.on { background: #111; color: #fff; border-color: #111; }
+    main { max-width: 1120px; margin: 0 auto; padding: 40px 40px 24px; display: grid; gap: 20px; }
+    .kicker { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--brand); margin: 0 0 10px; }
+    h1 { font-size: clamp(34px, 6vw, 58px); line-height: .95; letter-spacing: -.04em; margin: 0 0 12px; }
+    .lead { color: var(--muted); margin: 0; font-size: 17px; max-width: 56ch; }
+    .flow { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+    .flow span { background: var(--card); border-radius: 10px; padding: 10px 14px; font-weight: 700; font-size: 14px; }
+    .flow span i { font-style: normal; color: var(--brand); font-family: var(--mono); margin-right: 6px; }
+    .card { background: var(--card); border-radius: 12px; padding: 22px; min-width: 0; }
+    .card h2 { font-size: 18px; margin: 0 0 4px; letter-spacing: -.01em; }
+    .head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; } .head .spacer { flex: 1; }
+    .sub { color: var(--muted); font-size: 13.5px; margin: 0 0 14px; }
+    .venues { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .venue { background: #fff; border-radius: 12px; padding: 16px; min-width: 0; border-top: 4px solid var(--line-2); }
+    .venue.ok { border-color: var(--ok); } .venue.down, .venue.paused { border-color: var(--warn); } .venue.degraded { border-color: var(--gold); } .venue.best { box-shadow: 0 0 0 2px var(--brand) inset; }
+    .venue .p { font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+    .venue h3 { margin: 2px 0 10px; font-size: 15px; }
+    .apy { font-size: 34px; font-weight: 800; letter-spacing: -.03em; line-height: 1; } .apy small { font-size: 13px; color: var(--muted); font-weight: 600; letter-spacing: 0; }
+    .kv { display: grid; grid-template-columns: auto 1fr; gap: 3px 10px; font-size: 12.5px; margin-top: 12px; } .kv span:nth-child(odd) { color: var(--muted); } .kv span:nth-child(even) { text-align: right; font-weight: 600; overflow-wrap: anywhere; }
+    .bars { margin-top: 12px; display: grid; gap: 5px; } .bar { font-size: 11.5px; } .bar div { height: 5px; background: var(--line); border-radius: 3px; overflow: hidden; margin-top: 2px; } .bar div i { display: block; height: 100%; background: var(--brand); }
+    .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; background: var(--muted); } .dot.ok { background: var(--ok); } .dot.down, .dot.paused { background: var(--warn); } .dot.degraded { background: var(--gold); }
+    .ask { display: flex; gap: 8px; }
+    .ask input { flex: 1; min-width: 0; padding: 12px 16px; border: 1px solid var(--line-2); border-radius: 999px; font: inherit; }
+    .btn { padding: 10px 18px; border: 0; border-radius: 999px; background: var(--brand); color: #fff; font: 600 14px var(--sans); cursor: pointer; white-space: nowrap; }
+    .btn:disabled { opacity: .5; cursor: progress; } .btn.ghost { background: #fff; color: var(--ink); border: 1px solid var(--line-2); padding: 7px 14px; font-size: 12.5px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .chips button { border: 1px solid var(--line-2); background: #fff; border-radius: 999px; padding: 7px 13px; font: 600 12.5px var(--sans); cursor: pointer; }
+    .chips button.on { background: #111; color: #fff; border-color: #111; }
+    .faults { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 10px; font-size: 12.5px; color: var(--muted); }
+    .faults button { border: 1px dashed var(--line-2); background: #fff; border-radius: 999px; padding: 5px 11px; font: 600 12px var(--sans); cursor: pointer; color: var(--ink); }
+    .faults button.on { background: var(--warn-soft); border: 1px solid var(--warn); color: var(--warn); }
+    .status { margin-top: 12px; font-size: 13px; color: var(--muted); min-height: 18px; } .status.err { color: var(--warn); }
+    .banner { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; background: #fff; border-radius: 12px; padding: 14px 16px; margin-top: 14px; border-left: 5px solid var(--line-2); }
+    .banner.prepared, .banner.answered { border-color: var(--brand); } .banner.partial { border-color: var(--gold); } .banner.blocked, .banner.refused { border-color: var(--warn); }
+    .banner b { font-size: 15px; overflow-wrap: anywhere; }
+    .tag { display: inline-block; font-size: 10.5px; font-weight: 800; letter-spacing: .05em; border-radius: 6px; padding: 2px 7px; text-transform: uppercase; background: var(--card); color: var(--muted); white-space: nowrap; }
+    .tag.ok { background: var(--ok-soft); color: var(--ok); } .tag.bad { background: var(--warn-soft); color: var(--warn); } .tag.blue { background: var(--brand-soft); color: var(--brand); } .tag.gold { background: var(--gold-soft); color: var(--gold); }
+    .blocks { display: grid; gap: 12px; margin-top: 12px; }
+    .block { background: #fff; border-radius: 12px; padding: 16px 18px; min-width: 0; }
+    .block h3 { margin: 0 0 10px; font-size: 14px; }
+    .split { display: flex; height: 14px; border-radius: 7px; overflow: hidden; margin-bottom: 10px; gap: 2px; }
+    .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; } .legend span { display: block; min-width: 0; } .legend b { white-space: nowrap; } .legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; margin-right: 6px; vertical-align: -1px; }
+    .split div { min-width: 4px; }
+    .c0 { background: var(--brand); } .c1 { background: var(--vio); } .c2 { background: var(--ok); }
+    ul.why { margin: 0; padding-left: 18px; font-size: 13.5px; } ul.why li { margin: 3px 0; overflow-wrap: anywhere; }
+    table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    td, th { padding: 9px 10px 9px 0; border-top: 1px solid var(--line); text-align: left; vertical-align: top; overflow-wrap: anywhere; }
+    tr:first-child td { border-top: 0; }
+    th { font-size: 11px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 600; border-top: 0; }
+    .muted { color: var(--muted); } .mark { font-weight: 800; } .mark.ok { color: var(--ok); } .mark.bad { color: var(--warn); } .mark.part { color: var(--gold); }
+    details summary { cursor: pointer; color: var(--muted); font-size: 12.5px; margin-top: 6px; }
+    .txbox { background: #111318; color: #e8ebff; border-radius: 10px; padding: 12px 14px; font: 12px/1.6 var(--mono); overflow-wrap: anywhere; white-space: pre-wrap; margin-top: 8px; }
+    .proofs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .proof { background: #fff; border-radius: 12px; padding: 16px; min-width: 0; }
+    .proof h3 { margin: 0 0 4px; font-size: 15px; } .proof p { margin: 0 0 10px; font-size: 13px; color: var(--muted); }
+    .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 13px; padding: 6px 0; border-top: 1px solid var(--line); min-width: 0; }
+    .row > * { min-width: 0; overflow-wrap: anywhere; } .row:first-of-type { border-top: 0; }
+    .arch { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .arch div { background: #fff; border-radius: 12px; padding: 14px; font-size: 13px; min-width: 0; } .arch b { display: block; font-size: 13.5px; margin-bottom: 4px; } .arch span { color: var(--muted); }
+    footer { color: var(--muted); font-size: 12.5px; max-width: 1120px; margin: 0 auto; padding: 4px 40px 44px; } footer a { color: var(--muted); }
+    [hidden] { display: none !important; }
+    @media (max-width: 900px) { .top { padding: 12px 16px; } main { padding: 26px 16px 16px; } footer { padding: 4px 16px 32px; } .venues, .proofs, .arch { grid-template-columns: 1fr; } .brand em, .links { display: none; } .ask { flex-direction: column; } .hide-sm { display: none; } }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="#"><svg width="22" height="22" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="8" fill="#0033ff"/><path d="M10 24V11.2h8.4c2.7 0 4.4 1.6 4.4 4 0 1.7-.9 3-2.4 3.6L23.4 24h-3.2l-2.7-5H13.2V24H10zm3.2-7.8h5c1.2 0 1.9-.6 1.9-1.5s-.7-1.5-1.9-1.5h-5v3z" fill="#fff"/></svg><span><b>PHAROS</b> <em>MULTI-PROTOCOL AGGREGATOR</em></span></a>
+    <span class="spacer"></span>
+    <nav class="links"><a href="https://github.com/juhzinho/pharos-aggregator" target="_blank" rel="noopener">GitHub</a><a href="https://github.com/juhzinho/pharos-aggregator/blob/main/ARCHITECTURE.md" target="_blank" rel="noopener" data-i="archLink"></a></nav>
+    <div class="lang"><button data-lang="en">EN</button><button data-lang="pt">PT</button></div>
+  </header>
+
+  <main>
+    <section>
+      <p class="kicker">Cross-tool · Hard · Pharos Pacific</p>
+      <h1>Multi-Protocol Aggregator</h1>
+      <p class="lead" data-i="lead"></p>
+      <div class="flow" id="flow"></div>
+    </section>
+
+    <section class="card">
+      <div class="head"><h2 data-i="venuesTitle"></h2><span class="spacer"></span><span class="muted mono" id="venuesAt"></span><button class="btn ghost" id="refresh" data-i="refresh"></button></div>
+      <p class="sub" data-i="venuesSub"></p>
+      <div class="venues" id="venues"></div>
+    </section>
+
+    <section class="card">
+      <h2 data-i="askTitle"></h2>
+      <p class="sub" data-i="askSub"></p>
+      <form class="ask" id="askForm"><input id="q" autocomplete="off" /><button class="btn" id="askBtn" type="submit" data-i="askBtn"></button></form>
+      <div class="chips" id="chips"></div>
+      <div class="faults" id="faults"></div>
+      <div class="status" id="status"></div>
+      <div id="out"></div>
+    </section>
+
+    <section class="card">
+      <h2 data-i="proofTitle"></h2>
+      <p class="sub" data-i="proofSub"></p>
+      <div class="proofs" id="proofs"></div>
+    </section>
+
+    <section class="card">
+      <h2 data-i="archTitle"></h2>
+      <p class="sub" data-i="archSub"></p>
+      <div class="arch" id="arch"></div>
+    </section>
+  </main>
+  <footer id="footer"></footer>
+
+  <script>
+    const WALLET = "0xD27Cb53f5920D484261CC14d32094d3f043265C9";
+    const EXPLORER = "https://www.pharosscan.xyz";
+    const VENUE_IDS = [["rockawayx", "RockawayX"], ["sharpbyte", "SharpByte"], ["avalon", "Avalon"]];
+    const EXAMPLES = [
+      { run: "rates", q: "What are the best rates for USDC?" },
+      { run: "deposit-10k", q: "Deposit 10,000 USDC" },
+      { run: "deposit-10m", q: "Where should I put 10m USDC?" },
+      { run: "positions", q: `Positions of ${WALLET}` },
+      { run: "withdraw-100k", q: `Withdraw 100,000 USDC from ${WALLET}` },
+      { run: "outage", q: "Deposit 10,000 USDC", down: ["rockawayx"] },
+    ];
+    const T = {
+      en: {
+        lead: "One interface over Morpho and Avalon on Pharos. Ask for rates, positions, a deposit or a withdrawal: it picks the best venue, says why, and prepares the transactions for you to sign.",
+        flow: [["1", "Read every venue"], ["2", "Rate after your deposit"], ["3", "Route + explain"], ["4", "Prepare & simulate"]],
+        venuesTitle: "Venues", venuesSub: "Rebuilt from each protocol's own contracts at one block, and checked against what it actually paid.", refresh: "Refresh live",
+        net: "net APY", paid: "paid 1d / 7d", tvl: "TVL", exit: "can leave now", goes: "deposits go to", check: "model ↔ chain", room: "room left", lends: "Lends into", receives: "new deposits", goesIdle: "stays idle in the vault", goesReserve: "Avalon USDC reserve", goesMarket: (c) => `Morpho Blue ${c}/USDC`,
+        status: { ok: "live", down: "down", paused: "paused", degraded: "degraded" }, best: "best rate",
+        askTitle: "Ask", askSub: "Examples open instantly (recorded on mainnet). Your own request runs live on Pacific (~20 s). Nothing is ever signed.", askBtn: "Run live",
+        chips: ["Best rate", "Deposit 10k", "Deposit 10M", "Positions", "Withdraw 100k", "A venue down"],
+        faults: "Take a venue offline for a live run:",
+        running: "Reading every venue at one block, routing, simulating… (~20 s)",
+        recorded: (t) => `Recorded on Pacific · ${t}`, live: (s) => `Live on Pacific · ${s} s`,
+        outcome: { prepared: "Prepared for signature", answered: "Answered", partial: "Partial", blocked: "Blocked", refused: "Refused" },
+        forAmount: (a) => `For ${a} USDC`, now: "now", after: "after your deposit", plan: "Plan", why: "Why", txs: "Unsigned transactions — sign them in your wallet", sim: "simulated", simFail: "simulation fails", overrides: "as if", positions: "Positions", wallet: "idle in the wallet", locked: "locked", canLeave: "can leave now", perYear: "/yr",
+        proofTitle: "Proof of the full loop", proofSub: "On an Anvil fork of Pacific, a real wallet sent exactly the transactions the agent prepared.",
+        p1: "Deposit, routed and verified", p1s: "The agent routed 10,000 USDC, prepared approve + deposit; the wallet sent them; every amount matched.",
+        p2: "Withdraw, routed and verified", p2s: "5,000 USDC from the lowest-paying position, sent and checked.",
+        p3: "A protocol really goes down", p3s: "Avalon's own pool admin pauses its USDC reserve. The agent keeps routing, and shows the Avalon position as locked — not zero.",
+        archTitle: "Architecture", archSub: "One interface; every protocol behind its own adapter.",
+        arch: [["Adapters", "Morpho Vault V2 (look-through to Morpho Blue markets) · Avalon (Aave V3)"], ["Survey", "all venues at one block; each with its own client and deadline"], ["Router", "rate after deposit · split if it pays · lowest-yield first for exits"], ["Prepare", "unsigned EIP-1559 txs, simulated with eth_call state overrides"]],
+        archLink: "Architecture",
+        footer: `Pharos Pacific Mainnet (1672) · Morpho Vault V2 + Morpho Blue · Avalon (Aave V3) · <a href="https://rpc.pharos.xyz">rpc.pharos.xyz</a> · the agent never signs`,
+      },
+      pt: {
+        lead: "Uma interface única sobre Morpho e Avalon na Pharos. Peça taxas, posições, um depósito ou um saque: ele escolhe o melhor venue, explica o porquê e prepara as transações para você assinar.",
+        flow: [["1", "Lê todos os venues"], ["2", "Taxa depois do seu depósito"], ["3", "Roteia + explica"], ["4", "Prepara e simula"]],
+        venuesTitle: "Venues", venuesSub: "Reconstruído a partir dos contratos de cada protocolo num mesmo bloco, e conferido com o que ele realmente pagou.", refresh: "Atualizar ao vivo",
+        net: "APY líquido", paid: "pago 1d / 7d", tvl: "TVL", exit: "pode sair agora", goes: "depósitos vão para", check: "modelo ↔ chain", room: "espaço livre", lends: "Empresta em", receives: "novos depósitos", goesIdle: "fica parado no vault", goesReserve: "reserva USDC da Avalon", goesMarket: (c) => `Morpho Blue ${c}/USDC`,
+        status: { ok: "ao vivo", down: "fora do ar", paused: "pausado", degraded: "degradado" }, best: "melhor taxa",
+        askTitle: "Peça", askSub: "Os exemplos abrem na hora (gravados na mainnet). Seu pedido roda ao vivo na Pacific (~20 s). Nada é assinado.", askBtn: "Rodar ao vivo",
+        chips: ["Melhor taxa", "Depositar 10k", "Depositar 10M", "Posições", "Sacar 100k", "Um venue fora do ar"],
+        faults: "Derrube um venue numa execução ao vivo:",
+        running: "Lendo todos os venues num mesmo bloco, roteando, simulando… (~20 s)",
+        recorded: (t) => `Gravado na Pacific · ${t}`, live: (s) => `Ao vivo na Pacific · ${s} s`,
+        outcome: { prepared: "Pronto para assinar", answered: "Respondido", partial: "Parcial", blocked: "Bloqueado", refused: "Recusado" },
+        forAmount: (a) => `Para ${a} USDC`, now: "agora", after: "depois do depósito", plan: "Plano", why: "Por quê", txs: "Transações não assinadas — assine na sua carteira", sim: "simulada", simFail: "simulação falha", overrides: "como se", positions: "Posições", wallet: "parado na carteira", locked: "travado", canLeave: "pode sair agora", perYear: "/ano",
+        proofTitle: "Prova do ciclo completo", proofSub: "Num fork Anvil da Pacific, uma carteira real enviou exatamente as transações que o agente preparou.",
+        p1: "Depósito, roteado e verificado", p1s: "O agente roteou 10.000 USDC, preparou approve + deposit; a carteira enviou; cada valor bateu.",
+        p2: "Saque, roteado e verificado", p2s: "5.000 USDC da posição que rende menos, enviado e conferido.",
+        p3: "Um protocolo cai de verdade", p3s: "O próprio admin da Avalon pausa a reserva de USDC. O agente segue roteando e mostra a posição na Avalon como travada — não zero.",
+        archTitle: "Arquitetura", archSub: "Uma interface; cada protocolo atrás do seu próprio adapter.",
+        arch: [["Adapters", "Morpho Vault V2 (enxerga os mercados Morpho Blue) · Avalon (Aave V3)"], ["Levantamento", "todos os venues num mesmo bloco; cada um com seu cliente e prazo"], ["Roteador", "taxa depois do depósito · divide se compensar · saques pelo menor rendimento"], ["Preparo", "txs EIP-1559 não assinadas, simuladas com state override no eth_call"]],
+        archLink: "Arquitetura",
+        footer: `Pharos Pacific Mainnet (1672) · Morpho Vault V2 + Morpho Blue · Avalon (Aave V3) · <a href="https://rpc.pharos.xyz">rpc.pharos.xyz</a> · o agente nunca assina`,
+      },
+    };
+
+    const $ = (id) => document.getElementById(id);
+    const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+    const usdc = (raw, d = 0) => (Number(raw) / 1e6).toLocaleString(lang === "pt" ? "pt-BR" : "en-US", { maximumFractionDigits: d });
+    const pct = (x, d = 2) => (x == null ? "—" : `${(x * 100).toLocaleString(lang === "pt" ? "pt-BR" : "en-US", { minimumFractionDigits: d, maximumFractionDigits: d })}%`);
+    const when = (iso) => new Date(iso).toLocaleString(lang === "pt" ? "pt-BR" : "en-US", { dateStyle: "medium", timeStyle: "short" });
+    const shortAddr = (a) => `${a.slice(0, 6)}…${a.slice(-4)}`;
+    let lang = new URLSearchParams(location.search).get("lang") === "pt" || (!location.search.includes("lang=") && navigator.language?.startsWith("pt")) ? "pt" : "en";
+    let current = null, currentMeta = null, venuesReport = null, active = 0, down = new Set(), loop = null;
+    const cache = {};
+    const getRun = (name) => (cache[name] ??= fetch(`./runs/${name}.json`, { cache: "no-store" }).then((r) => (r.ok ? r.json() : null)).catch(() => null));
+
+    const goesTo = (v, t) => (v.kind === "aave-v3" ? t.goesReserve : v.liquidityMarket ? t.goesMarket(v.lookThrough.find((m) => m.receivesDeposits)?.collateral ?? "?") : t.goesIdle);
+    function renderVenues() {
+      const t = T[lang];
+      const r = venuesReport;
+      if (!r) return;
+      $("venuesAt").textContent = `${lang === "pt" ? "bloco" : "block"} ${r.block.number.toLocaleString(lang === "pt" ? "pt-BR" : "en-US")} · ${when(new Date(r.block.timestamp * 1000).toISOString())}`;
+      const best = r.decision?.venue;
+      $("venues").innerHTML = r.venues.map((v) => {
+        const head = `<div class="p"><span class="dot ${v.status}"></span>${esc(v.protocol)} · ${esc(t.status[v.status])}${v.id === best ? ` · <span class="tag blue">${esc(t.best)}</span>` : ""}</div><h3><a href="${EXPLORER}/address/${v.address}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">${esc(v.name)}</a></h3>`;
+        if (v.status === "down") return `<div class="venue down">${head}<p class="muted" style="font-size:13px;margin:0">${esc(v.reason)}</p></div>`;
+        const look = (v.lookThrough ?? []).filter((m) => m.share > 0.001).sort((a, b) => b.share - a.share);
+        const bars = v.kind === "morpho-vault-v2" ? `<div class="bars"><span class="muted" style="font-size:11.5px">${esc(t.lends)}</span>${look.map((m) => `<div class="bar">${esc(m.collateral)}/USDC · ${pct(m.supplyApy, 1)}${m.receivesDeposits ? ` · <b>← ${esc(t.receives)}</b>` : ""}<div><i style="width:${Math.max(2, m.share * 100).toFixed(1)}%"></i></div></div>`).join("")}</div>` : "";
+        return `<div class="venue ${v.status} ${v.id === best ? "best" : ""}">${head}<div class="apy">${pct(v.apy)} <small>${esc(t.net)}</small></div>
+          <div class="kv"><span>${esc(t.paid)}</span><span>${pct(v.realised1d)} / ${pct(v.realised7d)}</span><span>${esc(t.tvl)}</span><span>${usdc(v.tvl)}</span><span>${esc(t.exit)}</span><span>${usdc(v.exitLiquidity)}</span>${v.depositRoom != null ? `<span>${esc(t.room)}</span><span>${usdc(v.depositRoom)}</span>` : ""}<span>${esc(t.goes)}</span><span>${esc(goesTo(v, t))}</span><span>${esc(t.check)}</span><span>${v.check?.ok ? `<span class="mark ok">✓</span> ${pct(v.check.model)} ≈ ${pct(v.check.chain)}` : `<span class="mark bad">✗</span>`}</span></div>${bars}</div>`;
+      }).join("");
+    }
+
+    function render() {
+      const t = T[lang];
+      if (!current) return ($("out").innerHTML = "");
+      const r = current;
+      const tagOf = { prepared: "blue", answered: "blue", partial: "gold", blocked: "bad", refused: "bad" }[r.outcome] ?? "";
+      const banner = `<div class="banner ${esc(r.outcome)}"><span class="tag ${tagOf}">${esc(t.outcome[r.outcome] ?? r.outcome)}</span><b>${esc(r.summary)}</b></div>`;
+      const meta = `<p class="muted" style="font-size:12.5px;margin:8px 0 0">${esc(currentMeta)}${r.block ? ` · ${lang === "pt" ? "bloco" : "block"} ${r.block.number.toLocaleString(lang === "pt" ? "pt-BR" : "en-US")}` : ""}</p>`;
+      const blocks = [];
+      if (r.ranking?.length) blocks.push(`<div class="block"><h3>${esc(t.forAmount(usdc(r.amount)))}</h3><table>${r.ranking.map((x) => `<tr><td><span class="mark ${x.eligible ? "ok" : x.partialOk ? "part" : "bad"}">${x.eligible ? "✓" : x.partialOk ? "◐" : "✗"}</span> ${esc(x.name)}</td><td>${x.apyAfter != null && !x.partialOk ? `<span class="muted hide-sm">${pct(x.apyNow)} ${esc(t.now)} →</span> <b>${pct(x.apyAfter)}</b> <span class="muted hide-sm">${esc(t.after)}</span>` : ""}${x.eligible ? "" : `<div class="muted" style="font-size:12.5px">${esc(x.why)}</div>`}</td></tr>`).join("")}</table></div>`);
+      if (r.plan?.length) {
+        const total = r.plan.reduce((a, l) => a + Number(l.amount), 0);
+        const name = (id) => r.venues.find((v) => v.id === id)?.name ?? id;
+        blocks.push(`<div class="block"><h3>${esc(t.plan)}</h3><div class="split">${r.plan.map((l, i) => `<div class="c${i % 3}" style="flex:${Number(l.amount) / total}" title="${esc(name(l.venue))}"></div>`).join("")}</div><div class="legend">${r.plan.map((l, i) => `<span><i class="c${i % 3}"></i>${esc(name(l.venue))} · <b>${usdc(l.amount, 2)} USDC</b>${l.apyAfter != null ? ` · ${pct(l.apyAfter)}` : ""}</span>`).join("")}</div></div>`);
+      }
+      if (r.positions?.length) {
+        blocks.push(`<div class="block"><h3>${esc(t.positions)}</h3><table>${r.positions.map((p) => `<tr><td>${esc(p.name)}</td><td>${p.known ? `<b>${usdc(p.assets, 2)}</b> USDC · ${pct(p.apy)}` : `<span class="mark bad">?</span> ${esc(p.reason)}`}</td><td class="hide-sm muted">${p.known ? (p.locked ? `<span class="tag bad">${esc(t.locked)}</span>` : `${esc(t.canLeave)} ${usdc(p.withdrawableNow)}`) : ""}</td></tr>`).join("")}${r.wallet ? `<tr><td class="muted">${esc(t.wallet)}</td><td>${usdc(r.wallet.usdc, 2)} USDC</td><td class="hide-sm"></td></tr>` : ""}</table></div>`);
+      }
+      blocks.push(`<div class="block"><h3>${esc(t.why)}</h3><ul class="why">${(r.explanation ?? []).map((l) => `<li>${esc(l)}</li>`).join("")}</ul></div>`);
+      if (r.txs?.length) blocks.push(`<div class="block"><h3>${esc(t.txs)}</h3><table>${r.txs.map((x, i) => `<tr><td class="mono">${i + 1}</td><td>${esc(x.label)}${x.simulation ? ` · ${x.simulation.ok ? `<span class="tag ok">${esc(t.sim)} ✓</span>${x.simulation.overrides?.length ? ` <span class="muted" style="font-size:12px">${esc(t.overrides)}: ${esc(x.simulation.overrides.join(", "))}</span>` : ""}` : `<span class="tag bad">${esc(t.simFail)}</span> ${esc(x.simulation.reason)}`}` : ""}<details><summary>tx · cast</summary><div class="txbox">${esc(JSON.stringify(x.tx, null, 1))}</div><div class="txbox">${esc(x.cast)}</div></details></td></tr>`).join("")}</table></div>`);
+      $("out").innerHTML = banner + meta + `<div class="blocks">${blocks.join("")}</div>`;
+    }
+
+    async function loadRun(i) {
+      active = i;
+      renderChips();
+      const ex = EXAMPLES[i];
+      $("q").value = ex.q;
+      down = new Set(ex.down ?? []);
+      renderFaults();
+      const r = await getRun(ex.run);
+      if (!r) return;
+      current = r;
+      currentMeta = T[lang].recorded(when(r.recordedAt));
+      $("status").textContent = "";
+      $("status").className = "status";
+      render();
+    }
+
+    async function runLive(q) {
+      const t = T[lang];
+      active = -1;
+      renderChips();
+      $("askBtn").disabled = true;
+      $("status").className = "status";
+      $("status").textContent = t.running;
+      const t0 = Date.now();
+      try {
+        const params = new URLSearchParams({ q });
+        if (down.size) params.set("down", [...down].join(","));
+        const res = await fetch(`./api/ask?${params}`);
+        const body = await res.json();
+        if (!body.ok) throw new Error(body.error);
+        current = body.report;
+        currentMeta = t.live(((Date.now() - t0) / 1000).toFixed(1));
+        $("status").textContent = "";
+        if (current.venues?.length && current.kind === "rates") { venuesReport = current; renderVenues(); }
+        render();
+      } catch (err) {
+        $("status").className = "status err";
+        $("status").textContent = err.message;
+      } finally {
+        $("askBtn").disabled = false;
+      }
+    }
+
+    function renderChips() {
+      $("chips").innerHTML = T[lang].chips.map((c, i) => `<button type="button" class="${i === active ? "on" : ""}" data-i="${i}">${esc(c)}</button>`).join("");
+      $("chips").querySelectorAll("button").forEach((b) => (b.onclick = () => loadRun(Number(b.dataset.i))));
+    }
+    function renderFaults() {
+      $("faults").innerHTML = `<span>${esc(T[lang].faults)}</span>` + VENUE_IDS.map(([id, n]) => `<button type="button" class="${down.has(id) ? "on" : ""}" data-v="${id}">${down.has(id) ? "✕ " : ""}${esc(n)}</button>`).join("");
+      $("faults").querySelectorAll("button").forEach((b) => (b.onclick = () => {
+        const id = b.dataset.v;
+        if (down.has(id)) down.delete(id);
+        else if (down.size < VENUE_IDS.length - 1) down.add(id);
+        renderFaults();
+      }));
+    }
+
+    function renderProofs() {
+      const t = T[lang];
+      if (!loop) return ($("proofs").innerHTML = "");
+      const [dep, wd, paused] = loop.steps;
+      const checks = (v) => v.checks.map((c) => `<div class="row"><span class="mark ${c.ok ? "ok" : "bad"}">${c.ok ? "✓" : "✗"}</span><span>${esc(c.label)}</span><span class="muted mono">${esc(/^-?\d+$/.test(c.observed) ? `${usdc(c.observed, 2)} USDC` : c.observed)}</span></div>`).join("");
+      const hashes = (h) => h.map((x) => `<span class="mono">${esc(x.slice(0, 14))}…</span>`).join(" · ");
+      const a = `<div class="proof"><h3>${esc(t.p1)}</h3><p>${esc(t.p1s)}</p><div class="row"><span class="tag blue">${esc(dep.report.plan.map((l) => l.venue).join(" + "))}</span>${hashes(dep.hashes)} <span class="muted">(fork)</span></div>${checks(dep.verify)}<div class="row"><span class="tag ${dep.verify.outcome === "success" ? "ok" : "bad"}">${esc(dep.verify.outcome)}</span>${esc(dep.verify.summary)}</div></div>`;
+      const b = `<div class="proof"><h3>${esc(t.p2)}</h3><p>${esc(t.p2s)}</p><div class="row"><span class="tag blue">${esc(wd.report.plan.map((l) => l.venue).join(" + "))}</span>${hashes(wd.hashes)} <span class="muted">(fork)</span></div>${checks(wd.verify)}<div class="row"><span class="tag ${wd.verify.outcome === "success" ? "ok" : "bad"}">${esc(wd.verify.outcome)}</span>${esc(wd.verify.summary)}</div></div>`;
+      const av = paused.positions.positions.find((p) => p.venue === "avalon");
+      const c = `<div class="proof"><h3>${esc(t.p3)}</h3><p>${esc(t.p3s)}</p><div class="row"><span class="tag bad">setReservePause</span><span class="mono">${esc(paused.pauseTx.slice(0, 14))}…</span> <span class="muted">(fork)</span></div><div class="row"><span class="dot paused"></span><span>Avalon · ${esc(T[lang].status.paused)}</span></div><div class="row"><span>${esc(av.name)}</span><b>${usdc(av.assets)} USDC</b><span class="tag bad">${esc(t.locked)}</span></div><div class="row"><span class="tag blue">deposit</span>${esc(paused.deposit.summary)}</div><div class="row"><span class="tag gold">withdraw</span>${esc(paused.withdraw.summary)}</div></div>`;
+      $("proofs").innerHTML = a + b + c;
+    }
+
+    function setLang(l) {
+      lang = l;
+      document.documentElement.lang = l === "pt" ? "pt-BR" : "en";
+      document.querySelectorAll("[data-i]").forEach((el) => { if (typeof T[l][el.dataset.i] === "string") el.textContent = T[l][el.dataset.i]; });
+      document.querySelectorAll(".lang button").forEach((b) => b.classList.toggle("on", b.dataset.lang === l));
+      $("flow").innerHTML = T[l].flow.map(([n, s]) => `<span><i>${n}</i>${esc(s)}</span>`).join("");
+      $("arch").innerHTML = T[l].arch.map(([h, s]) => `<div><b>${esc(h)}</b><span>${esc(s)}</span></div>`).join("");
+      $("footer").innerHTML = T[l].footer;
+      renderChips();
+      renderFaults();
+      renderVenues();
+      if (current && currentMeta && active >= 0) currentMeta = T[l].recorded(when(current.recordedAt));
+      render();
+      renderProofs();
+    }
+
+    document.querySelectorAll(".lang button").forEach((b) => (b.onclick = () => {
+      setLang(b.dataset.lang);
+      const u = new URL(location.href);
+      u.searchParams.set("lang", b.dataset.lang);
+      history.replaceState(null, "", u);
+    }));
+    $("askForm").onsubmit = (e) => {
+      e.preventDefault();
+      const q = $("q").value.trim();
+      if (q) runLive(q);
+    };
+    $("refresh").onclick = async () => {
+      $("refresh").disabled = true;
+      try {
+        const res = await fetch("./api/ask?q=" + encodeURIComponent("What are the best rates?"));
+        const body = await res.json();
+        if (!body.ok) throw new Error(body.error);
+        venuesReport = body.report;
+        renderVenues();
+      } catch (err) {
+        $("venuesAt").textContent = err.message;
+      } finally {
+        $("refresh").disabled = false;
+      }
+    };
+
+    setLang(lang);
+    Promise.all([getRun("rates"), getRun("fork-loop")]).then(([rates, l]) => {
+      venuesReport = rates;
+      loop = l;
+      renderVenues();
+      renderProofs();
+    });
+    loadRun(1);
+  </script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+{
+  "name": "pharos-aggregator",
+  "version": "1.0.0",
+  "description": "One interface over several Pharos Pacific yield venues: query positions and rates, route deposits and withdrawals to the best venue with the reason, prepare them for signature, and keep working when a venue is down.",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.12"
+  },
+  "scripts": {
+    "agg": "node tasks/agg/agg.js",
+    "web": "node scripts/dev-server.js",
+    "test": "node --test test/*.test.js",
+    "test:e2e": "node test/e2e.js"
+  },
+  "dependencies": {
+    "viem": "^2.57.5"
+  },
+  "optionalDependencies": {
+    "@foundry-rs/anvil-linux-amd64": "1.7.1",
+    "@foundry-rs/anvil-win32-amd64": "1.7.1"
+  }
+}
